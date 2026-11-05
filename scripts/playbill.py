@@ -596,13 +596,18 @@ def _typing_line(scene: Scene, text: str, y: int, scale: int, fill: str, slot: i
     full = edges[-1]
     start = slot / slots
     reveal = start + 0.10
-    # Hold the finished line until the cycle restarts. Opacity hides it off-slot.
-    values = [0, 0, *edges, full]
-    times = [0, start]
-    steps = len(edges)
-    for i in range(steps):
-        times.append(start + (reveal - start) * ((i + 1) / steps))
-    times.append(1)
+    # Line one is already on stage at t=0, so a first paint and a paused
+    # viewer still read a complete sentence. The other lines type on.
+    if slot == 0:
+        values = [full, full]
+        times = [0, 1]
+    else:
+        values = [0, 0, *edges, full]
+        times = [0, start]
+        steps = len(edges)
+        for i in range(steps):
+            times.append(start + (reveal - start) * ((i + 1) / steps))
+        times.append(1)
     # Keep keyTimes monotonic and closed on [0, 1].
     cleaned = [0.0]
     for stamp in times[1:-1]:
