@@ -65,55 +65,114 @@ FONT = {
     ")": [" ##  ", "   # ", "    #", "    #", "    #", "   # ", " ##  "],
 }
 
-# Stage version of the lemon-headed lead: tall yellow head, long nose,
-# squint, dark shirt, a small green-and-brown hem, plus a bow tie and a
-# playbill. Original drawing, not a trace of any existing character.
-# Tall lemon head, long outlined nose to the left, squint, bow tie,
-# and a green-and-brown hem. The nose is the silhouette cue from his avatar.
-LEMON = """
-...........KKKKKK.......
-.........KKYYYYYYKK.....
-........KYYYYYYYYYYK....
-.......KYYYYYYYYYYYYK...
-.......KYYHHHHHHYYYYK...
-......KYYYYYYYYYYYYYYK..
-......KYYYYYYYYYYYYYYK..
-...KKNNYYYYYYBBBYYYYYK..
-..KNNNYYYYYYYYYYYYYYYYK.
-.KNNNYYYYYYYYYYYYYYYYYK.
-..KYYYYYYYYYYYYYYYYYYYK.
-..KYYYYYYYYBYYYYYYYYYYK.
-...KYYYYYYYYYYYYYYYYYK..
-...KYYYYYYYYYYYYYYYYYK..
-....KKYYYYYYYYYYYYKK....
-......KKKKKKKKKKKK......
-.......KDDDDDDK.........
-......KDDDDDDDDK........
-.....KDDDDPPDDDDK.......
-.....KDDDPPPPDDDK.......
-.....KDDDDDDDDDDK.......
-.....KDDDGGGGGDDK.......
-.....KDDDDDDDDDDK.......
-.....KDDDDLTTDDDK.......
-.....KDDDDDDDDDDK.......
-......KDDDDDDDDK........
-......KDDDKKDDDK........
-......KKKK..KKKK........
-.......KK....KK.........
-""".strip("\n")
+# Colors and the front grid are copied cell for cell from the attached sprite.
+# J is the flat green backdrop and is not drawn.
+EXACT_COLORS = {
+    "A": "#156E20",
+    "B": "#212020",
+    "C": "#3D2F30",
+    "D": "#433F34",
+    "E": "#545047",
+    "F": "#734610",
+    "G": "#833301",
+    "H": "#8C8F3B",
+    "I": "#8F8500",
+    "K": "#955E1A",
+    "L": "#A45F00",
+    "M": "#A6FC00",
+    "N": "#BDAC00",
+    "O": "#DEA900",
+    "P": "#F9FB00",
+    "Q": "#FCFBFA",
+    "R": "#FED650",
+}
+
+FRONT_GRID = """
+JJJJJJJJJJCCCJJJJJJJJJJ
+JJJJJJJJJCPPRCJJJJJJJJJ
+JJJJJJJJCLPPRLCJJJJJJJJ
+JJJJJJJCOPPRROOCJJJJJJJ
+JJJJJJCLPPPPRRRLCJJJJJJ
+JJJJJJCPPPPPPRRRCJJJJJJ
+JJJJJCOPPPPPPRRROCJJJJJ
+JJJJJCPPPPPPPRRRRCJJJJJ
+JJJJCOPPPPPPPRRRROCJJJJ
+JJJJCPPPPPPPPRRRRRCJJJJ
+JJJJCPQCCQPPPQCCQRCJJJJ
+JJJJCPPPPPLPLRRRRRCJJJJ
+JJJJCOPPPPCPCRRRROCJJJJ
+JJJJJCPPPPLPLRRRRCJJJJJ
+JJJJJCOPPPOLORRROCJJJJJ
+JJJJJJCPPPPORRRRCJJJJJJ
+JJJJJBDCOPPRRROCDBJJJJJ
+JJJJBCEECCOROCCDDCBJJJJ
+JJJBEBEEEDCCCDDDDBDBJJJ
+CCCEDBDEEEECDDDAABDDCCC
+CPPRCBBDEEEEEAAABJCRRRC
+CCCPCIGIDEAMMADDBHCPCCC
+JJJCCNGGAAMMADDBHHCCJJJ
+JJJBKINICCCBCCDBHHHHJJJ
+JJBKFFBBCDBHBDDBHHHHJJJ
+JJBFFBHBCEBHBEDBHHHHJJJ
+JJBBBHHBCCBHBCCBHHHJJJJ
+JJJJJHHHBBHHHBBHHHJJJJJ
+JJJJJJJHHHHHHHHHJJJJJJJ
+""".strip("\n").splitlines()
+
+# Three-quarter view: same head language, long nose to the side, white suit.
+SIDE_GRID = """
+....CCC................
+...CPPRC...............
+..CLPPRLC..............
+.COPPRROOC.............
+CLPPPPRRRLC............
+CPPPPPPRRRC............
+COPPPPPPRRROC..........
+CPPPPPPPRRRRC..........
+COPPPPPPPRRRROC........
+CPPPPQCCPRRRRC.........
+CPPPPPPPPRRRRPPPPPPPPPC
+CPPPPPPPPRRRRBBBBBBBBBC
+COPPPPCKQRRROC.........
+CPPPPPPRRRRC...........
+.COPPPRRROC............
+..CPPPORRRC............
+JJJJJBQCOPPRRROCQBJJJJJ
+JJJJBCQQCCOROCCQQCBJJJJ
+JJJBQBQQQQCCCQQQQBQBJJJ
+CCCQQBQQQQQCQQQAABQQCCC
+CPPRCBBQQQQQQAAABJCRRRC
+CCCPCIGIQQAMMAQQBHCPCCC
+JJJCCNGGAAMMAQQBHHCCJJJ
+JJJBKINICCCBCCQBHHHHJJJ
+JJBKFFBBCQBHBQQBHHHHJJJ
+JJBFFBHBCQBHBQQBHHHHJJJ
+JJBBBHHBCCBHBCCBHHHJJJJ
+JJJJJHHHBBHHHBBHHHJJJJJ
+JJJJJJJHHHHHHHHHJJJJJJJ
+""".strip("\n").splitlines()
+
+
+def _check_grids() -> None:
+    for name, grid in (("front", FRONT_GRID), ("side", SIDE_GRID)):
+        if len(grid) != 29 or any(len(row) != 23 for row in grid):
+            raise ValueError(f"bad {name} grid")
+
+
+_check_grids()
 
 # Tiny icons, 9 columns, used on scene cards.
 ICONS = {
     "lemon": """
-....LL...
-...LKKL..
-..KYYYYK.
-.KYYYYYYK
-.KYYBBYYK
-.KYYYYYYK
-.KYBBYYYK
-..KYYYYK.
-...KKKK..
+...KKK...
+..KYYYK..
+.KYYYYYK.
+KYYYYYYYK
+KYYYYYYYK
+.KYYYYYK.
+..KYYYK..
+...KKK...
+.........
 """.strip("\n"),
     "riff": """
 KK....KK.
@@ -216,8 +275,13 @@ _validate_font()
 
 
 LIGHT = {
-    "bg": "#FFF6DC",
-    "bg_deep": "#FFE7B0",
+    "bg": "#7ED4FF",
+    "bg_deep": "#C8EFFF",
+    "cloud": "#FFFFFF",
+    "hill": "#3CB85A",
+    "hill_hi": "#8BE56E",
+    "hill_dark": "#1F8A3C",
+    "night": False,
     "ink": "#2A160E",
     "muted": "#6B4A32",
     "curtain": "#C4314A",
@@ -237,7 +301,7 @@ LIGHT = {
     "pink": "#FF6B9D",
     "mint": "#1F9D6B",
     "grape": "#6C3BB8",
-    "ticket": "#FFFDF6",
+    "ticket": "#FFF8E4",
     "ticket_ink": "#2A160E",
     "marquee": "#2A160E",
     "role": "#861832",
@@ -252,8 +316,13 @@ LIGHT = {
 }
 
 DARK = {
-    "bg": "#140C22",
-    "bg_deep": "#241636",
+    "bg": "#1A1244",
+    "bg_deep": "#26185A",
+    "cloud": "#3A2E70",
+    "hill": "#1C5C38",
+    "hill_hi": "#2E8A50",
+    "hill_dark": "#0E3320",
+    "night": True,
     "ink": "#FFF1C9",
     "muted": "#E4C98A",
     "curtain": "#E23B5C",
@@ -273,7 +342,7 @@ DARK = {
     "pink": "#FF8EC4",
     "mint": "#5EECC0",
     "grape": "#C4A6FF",
-    "ticket": "#241636",
+    "ticket": "#2C2158",
     "ticket_ink": "#FFF1C9",
     "marquee": "#FFE7A0",
     "role": "#FF8EC4",
@@ -582,6 +651,66 @@ def _frame(scene: Scene, color: str, thickness: int = 5) -> None:
     scene.rect(w - t, 0, t, h, color)
 
 
+def candy_frame(scene: Scene) -> None:
+    """Pink and lemon stripe, the candy border used across the page."""
+    w, h = scene.w, scene.h
+    scene.rect(0, 0, w, 5, "#FF5C93")
+    scene.rect(0, h - 5, w, 5, "#FF5C93")
+    scene.rect(0, 0, 5, h, "#FF5C93")
+    scene.rect(w - 5, 0, 5, h, "#FF5C93")
+    scene.rect(5, 5, w - 10, 3, "#FFE14A")
+    scene.rect(5, h - 8, w - 10, 3, "#FFE14A")
+    scene.rect(5, 5, 3, h - 10, "#FFE14A")
+    scene.rect(w - 8, 5, 3, h - 10, "#FFE14A")
+
+
+def _bob(begin: str) -> str:
+    return (
+        '<animateTransform attributeName="transform" attributeType="XML" type="translate" '
+        f'dur="1.8s" begin="{begin}" repeatCount="indefinite" calcMode="discrete" '
+        'values="0,0;0,-6;0,0;0,-6;0,0"/>'
+    )
+
+
+def sprite_group(grid: list[str], ox: int, oy: int, scale: int, begin: str) -> str:
+    parts = [_bob(begin)]
+    for gy, row in enumerate(grid):
+        for gx, ch in enumerate(row):
+            color = EXACT_COLORS.get(ch)
+            if not color:
+                continue
+            parts.append(rect_tag(ox + gx * scale, oy + gy * scale, scale, scale, color))
+    return "<g>" + "".join(parts) + "</g>"
+
+
+def _cloud(scene: Scene, x: int, y: int, color: str) -> None:
+    scene.rect(x + 8, y, 22, 8, color)
+    scene.rect(x, y + 6, 40, 12, color)
+    scene.rect(x + 10, y + 16, 20, 6, color)
+
+
+def _spark(scene: Scene, x: int, y: int, color: str, begin: str) -> None:
+    pulse = (
+        f'<animate attributeName="fill-opacity" dur="2.4s" begin="{begin}" '
+        'repeatCount="indefinite" calcMode="discrete" values="1;0.25;1" keyTimes="0;0.5;1"/>'
+    )
+    scene.rect(x + 2, y, 2, 6, color, pulse)
+    scene.rect(x, y + 2, 6, 2, color)
+
+
+def _lemon_tower(scene: Scene, x: int, top: int, height: int) -> None:
+    yellow, shade, outline = "#F9FB00", "#DEA900", "#3D2F30"
+    scene.rect(x + 16, top, 10, 6, outline)
+    scene.rect(x + 18, top + 2, 6, 4, yellow)
+    scene.rect(x + 8, top + 6, 26, 14, yellow)
+    scene.rect(x + 10, top + 8, 6, 10, shade)
+    scene.rect(x + 2, top + 18, 38, height - 28, yellow)
+    scene.rect(x + 4, top + 22, 8, height - 40, shade)
+    scene.rect(x + 16, top + height // 2, 10, 12, outline)
+    scene.rect(x + 18, top + height // 2 + 2, 6, 8, "#7ED4FF")
+    scene.rect(x, top + height - 8, 42, 8, outline)
+
+
 def _typing_line(scene: Scene, text: str, y: int, scale: int, fill: str, slot: int, slots: int, cursor: str) -> None:
     width = measure(text, scale)
     x = int((scene.w - width) / 2)
@@ -651,68 +780,48 @@ def _typing_line(scene: Scene, text: str, y: int, scale: int, fill: str, slot: i
 
 
 def build_hero(palette: dict) -> Scene:
-    w, h = 920, 312
-    stage_y = 250
+    """Land of Ooo matinee or twilight, with the two Lemongrab twins in front."""
+    w, h = 920, 430
     scene = Scene(w, h, palette["bg"])
-    scene.rect(8, stage_y, w - 16, h - stage_y - 8, palette["stage"])
-    scene.rect(8, stage_y, w - 16, 8, palette["stage_hi"])
-    scene.rect(8, stage_y + 8, w - 16, 5, palette["stage_dark"])
-    _ellipse(scene, 150, stage_y + 28, 54, 14, palette["stage_hi"])
+    night = palette["night"]
+    if night:
+        for sx, sy in (
+            (40, 28), (120, 64), (210, 22), (300, 70), (410, 30),
+            (520, 58), (640, 24), (730, 68), (820, 36), (880, 18),
+        ):
+            scene.rect(sx, sy, 3, 3, "#FFF6C2")
+        _spark(scene, 160, 40, "#FFF6C2", "0s")
+        _spark(scene, 600, 48, "#FFE14A", "0.6s")
+        _spark(scene, 840, 80, "#FF8EC4", "1.1s")
+    else:
+        for cx, cy in ((30, 18), (150, 28), (340, 14), (560, 26), (760, 16)):
+            _cloud(scene, cx, cy, palette["cloud"])
+        _spark(scene, 250, 36, "#FFFFFF", "0s")
+        _spark(scene, 680, 30, "#FFE14A", "0.7s")
 
-    # A little candy on the boards. Fixed spots, not a random scatter.
-    confetti = [
-        (230, stage_y + 24, palette["pink"]),
-        (360, stage_y + 36, palette["mint"]),
-        (520, stage_y + 22, palette["gold_hi"]),
-        (680, stage_y + 34, palette["pink"]),
-        (790, stage_y + 20, palette["grape"]),
-    ]
-    for cx, cy, color in confetti:
-        scene.rect(cx, cy, 4, 4, color)
+    # Lemon-kingdom towers behind the hills, one on each side.
+    _lemon_tower(scene, 28, 118, 230)
+    _lemon_tower(scene, 118, 168, 170)
+    _lemon_tower(scene, 760, 150, 190)
+    _lemon_tower(scene, 850, 110, 240)
 
-    curtain_h = stage_y - 36
-    scene.xml(_curtain_group(palette, 10, 36, curtain_h, "0,0;-4,0;0,0;4,0;0,0", "0s"))
-    scene.xml(_curtain_group(palette, w - 10 - 40, 36, curtain_h, "0,0;4,0;0,0;-4,0;0,0", "0.6s"))
-    _valance(scene, palette, 52, 30, w - 104)
+    hill_y = 348
+    scene.rect(0, hill_y, w, h - hill_y, palette["hill"])
+    _ellipse(scene, 180, hill_y, 200, 34, palette["hill_hi"])
+    _ellipse(scene, 480, hill_y + 6, 240, 40, palette["hill"])
+    _ellipse(scene, 780, hill_y, 190, 32, palette["hill_dark"])
+    for gx, gy in ((70, hill_y - 8), (240, hill_y - 4), (520, hill_y - 10), (700, hill_y - 6), (860, hill_y - 8)):
+        scene.rect(gx + 2, gy, 4, 10, palette["hill_dark"])
+        scene.rect(gx, gy + 4, 10, 6, palette["hill_hi"])
 
-    # Candy-stick column, stage right, balancing the lemon.
-    col_x, col_y, col_w, col_h = 804, 150, 28, stage_y - 150
-    scene.rect(col_x - 4, col_y, col_w + 8, 8, palette["gold"])
-    scene.rect(col_x, col_y + 8, col_w, col_h - 16, palette["pink"])
-    for i in range(8, col_h - 16, 10):
-        scene.rect(col_x, col_y + i, col_w, 4, palette["cream"])
-    scene.rect(col_x - 4, stage_y - 8, col_w + 8, 8, palette["gold"])
-
-    rows = parse_art(LEMON)
-    scale = 4
-    sprite_h = len(rows) * scale
-    sprite_w = len(rows[0]) * scale
-    sprite_x, sprite_y = 62, stage_y - sprite_h
-    if sprite_y < 96:
-        raise SystemExit(f"lemon collides with the marquee (top {sprite_y})")
-    bag: dict[tuple[int, int], str] = {}
-    blit(bag, rows, SPRITE_COLORS, sprite_x, sprite_y, scale)
-    scene.xml(
-        "<g>"
-        + _sway("0,0;0,-4;0,0;0,-4;0,0", "1.6s")
-        + "".join(compress(bag))
-        + "</g>"
-    )
-
-    # Footlights in front of the boots.
-    for x in range(70, w - 70, 36):
-        scene.rect(x, stage_y - 4, 10, 6, palette["gold"])
-        scene.rect(x + 2, stage_y - 2, 6, 3, palette["gold_hi"])
-
-    scene.draw_text_centered("THE FAROL PLAYHOUSE", w // 2, 46, 2, palette["muted"])
-    scene.draw_text_centered("MARK JAYSON FAROL", w // 2, 70, 5, palette["marquee"])
-    scene.draw_text_centered("QUANTITATIVE ECONOMIST", w // 2, 114, 2, palette["role"])
-
-    plaque = "NOW PLAYING"
-    plaque_w = measure(plaque, 2)
-    plaque_x = int((w - plaque_w) / 2) - 8
-    scene.rect(plaque_x, 136, plaque_w + 16, 20, palette["gold"])
-    scene.draw_text(plaque, plaque_x + 8, 139, 2, "#2A160E")
+    banner = "THE EARL OF LEMONGARB PRESENTS"
+    banner_w = measure(banner, 2)
+    bx = (w - banner_w) // 2 - 12
+    scene.rect(bx, 46, banner_w + 24, 24, "#FF5C93")
+    scene.rect(bx + 4, 50, banner_w + 16, 16, "#FFE14A")
+    scene.draw_text(banner, bx + 12, 51, 2, "#2A160E")
+    scene.draw_text_centered("MARK JAYSON FAROL", w // 2, 78, 4, palette["marquee"])
+    scene.draw_text_centered("QUANTITATIVE ECONOMIST", w // 2, 112, 2, palette["role"])
 
     lines = [
         "RESEARCH-GRADE PANELS",
@@ -722,11 +831,28 @@ def build_hero(palette: dict) -> Scene:
         "OPEN TO ECONOMIST ROLES",
     ]
     for index, line in enumerate(lines):
-        _typing_line(scene, line, 168, 3, palette["rotator"], index, len(lines), palette["gold"])
+        _typing_line(scene, line, 134, 3, palette["rotator"], index, len(lines), palette["gold"])
 
-    scene.draw_text_centered("LAS VEGAS", w // 2, stage_y + 22, 2, palette["cream"])
-    _bulbs(scene, palette, 14)
-    _frame(scene, palette["gold"])
+    scale = 6
+    sprite_h = 29 * scale
+    sprite_w = 23 * scale
+    gap = 22
+    pair = sprite_w * 2 + gap
+    left = (w - pair) // 2
+    top = hill_y - sprite_h + 18
+    # Side twin on the left, nose pointing toward the front twin.
+    scene.xml(sprite_group(SIDE_GRID, left, top, scale, "0s"))
+    scene.xml(sprite_group(FRONT_GRID, left + sprite_w + gap, top, scale, "0.45s"))
+
+    bubble = "ACCEPTABLE."
+    bubble_w = measure(bubble, 2)
+    speech_x = left + sprite_w - 10
+    speech_y = top - 8
+    scene.rect(speech_x, speech_y, bubble_w + 16, 22, "#FFFDF6")
+    scene.rect(speech_x + 8, speech_y + 20, 8, 6, "#FFFDF6")
+    scene.draw_text(bubble, speech_x + 8, speech_y + 4, 2, "#2A160E")
+
+    candy_frame(scene)
     return scene
 
 
@@ -763,26 +889,23 @@ def build_stats(palette: dict) -> Scene:
             tw = measure(text, scale)
             scene.draw_text(text, content_x + (content_w - tw) // 2, text_y, scale, color)
             text_y += GLYPH_H * scale + 4
-    _frame(scene, palette["gold"], 4)
+    candy_frame(scene)
     return scene
 
 
 def build_divider() -> Scene:
-    w, h = 920, 36
+    w, h = 920, 40
     scene = Scene(w, h, None)
-    scene.rect(12, 16, 360, 4, "#E2A31A")
-    scene.rect(548, 16, 360, 4, "#E2A31A")
-    for x, color in ((24, "#FF6B9D"), (80, "#1F9D6B"), (840, "#FF6B9D"), (888, "#6C3BB8")):
-        scene.rect(x, 12, 8, 8, color)
-    lemon = parse_art(ICONS["lemon"])
-    blit(
-        scene.bag,
-        lemon,
-        {"K": "#1A100C", "Y": "#FFE14A", "B": "#1A100C", "L": "#2F9E55"},
-        430,
-        2,
-        3,
-    )
+    for x in range(16, w - 16, 16):
+        scene.rect(x, 18, 10, 4, "#FF5C93" if (x // 16) % 2 == 0 else "#FFE14A")
+    # Lemon drops and grass tufts.
+    for x, color in ((48, "#F9FB00"), (120, "#FF5C93"), (800, "#5EECC0"), (860, "#F9FB00")):
+        scene.rect(x, 8, 14, 10, color)
+        scene.rect(x + 4, 4, 6, 6, color)
+        scene.rect(x + 2, 16, 10, 4, "#3D2F30")
+    for x in (200, 460, 680):
+        scene.rect(x + 3, 8, 4, 12, "#1F8A3C")
+        scene.rect(x, 14, 12, 6, "#8BE56E")
     return scene
 
 
@@ -821,48 +944,43 @@ def build_pipeline(palette: dict) -> Scene:
             scene.rect(ax, ay, gap - 18, 4, palette["gold"])
             scene.rect(ax + gap - 22, ay - 5, 4, 14, palette["gold"])
             scene.rect(ax + gap - 18, ay - 2, 4, 8, palette["gold_hi"])
-    scene.draw_text_centered("FROM THE ARCHIVE TO THE STAGE", w // 2, 8, 2, palette["muted"])
-    _frame(scene, palette["gold"], 4)
+    scene.draw_text_centered("FROM THE ARCHIVE TO THE STAGE", w // 2, 14, 2, palette["muted"])
+    candy_frame(scene)
     return scene
 
 
 def build_footer(palette: dict) -> Scene:
-    w, h = 920, 78
+    w, h = 920, 132
     scene = Scene(w, h, palette["bg"])
-    scene.xml(_curtain_group(palette, 10, 14, h - 28, "0,0;-3,0;0,0;3,0;0,0", "0s"))
-    scene.xml(_curtain_group(palette, w - 50, 14, h - 28, "0,0;3,0;0,0;-3,0;0,0", "0.4s"))
-    rows = parse_art(ICONS["lemon"])
-    bag: dict[tuple[int, int], str] = {}
-    blit(
-        bag,
-        rows,
-        {"K": "#1A100C", "Y": "#FFE14A", "B": "#1A100C", "L": "#3CAA62"},
-        78,
-        14,
-        4,
-    )
-    scene.xml("<g>" + _sway("0,0;0,-3;0,0", "1.8s") + "".join(compress(bag)) + "</g>")
-    scene.draw_text_centered("CURTAIN CALL", w // 2 + 20, 18, 3, palette["marquee"])
-    scene.draw_text_centered("MARK JAYSON FAROL  /  LAS VEGAS", w // 2 + 20, 46, 2, palette["muted"])
-    _frame(scene, palette["gold"], 4)
+    hill_y = 96
+    scene.rect(0, hill_y, w, h - hill_y, palette["hill"])
+    _ellipse(scene, 160, hill_y, 140, 22, palette["hill_hi"])
+    _ellipse(scene, 760, hill_y, 150, 22, palette["hill_dark"])
+    scale = 3
+    top = h - 8 - 29 * scale
+    scene.xml(sprite_group(SIDE_GRID, 18, top, scale, "0.2s"))
+    scene.xml(sprite_group(FRONT_GRID, w - 18 - 23 * scale, top, scale, "0.7s"))
+    scene.draw_text_centered("MARK JAYSON FAROL", w // 2, 28, 3, palette["marquee"])
+    scene.draw_text_centered("LAS VEGAS", w // 2, 58, 2, palette["role"])
+    candy_frame(scene)
     return scene
 
 
 def _icon_colors(accent: str) -> dict[str, str]:
-    return {"K": NIGHT_INK, "Y": accent, "B": "#1A100C", "P": "#FF4D88", "L": "#3CAA62", ".": ""}
+    return {"K": "#2A160E", "Y": accent, "B": "#1A100C", "P": "#FF4D88", "L": "#3CAA62", ".": ""}
 
 
 def build_poster(title: str, subtitle: str, accent: str, icon: str) -> Scene:
     w, h = 880, 84
-    scene = Scene(w, h, NIGHT_CARD)
-    scene.rect(0, 0, w, h, NIGHT_GOLD)
-    scene.rect(3, 3, w - 6, h - 6, NIGHT_CARD)
-    scene.rect(3, 3, 12, h - 6, accent)
+    scene = Scene(w, h, "#FFF8E6")
+    scene.rect(0, 0, w, h, "#FF5C93")
+    scene.rect(5, 5, w - 10, h - 10, "#FFE566")
+    scene.rect(9, 9, w - 18, h - 18, "#FFF8E6")
+    scene.rect(9, 9, 10, h - 18, accent)
     rows = parse_art(ICONS[icon])
     blit(scene.bag, rows, _icon_colors(accent), 28, 20, 4)
-    scene.draw_text(title, 112, 16, 3, NIGHT_INK)
-    scene.draw_text(subtitle, 112, 48, 2, NIGHT_MUTED)
-    # Pixel chevron.
+    scene.draw_text(title, 112, 16, 3, "#2A160E")
+    scene.draw_text(subtitle, 112, 48, 2, "#6B4428")
     chevron = ["#..", "##.", "###", "##.", "#.."]
     ox, oy = w - 42, 30
     bag = scene.bag
@@ -871,7 +989,7 @@ def build_poster(title: str, subtitle: str, accent: str, icon: str) -> Scene:
             if bit == "#":
                 for dy in range(3):
                     for dx in range(3):
-                        bag[(ox + gx * 3 + dx, oy + gy * 3 + dy)] = NIGHT_GOLD
+                        bag[(ox + gx * 3 + dx, oy + gy * 3 + dy)] = "#FF5C93"
     return scene
 
 
@@ -879,10 +997,10 @@ def build_link(label: str, accent: str) -> Scene:
     scale = 3
     text_w = measure(label, scale)
     w, h = text_w + 48, 52
-    scene = Scene(w, h, NIGHT_CARD)
+    scene = Scene(w, h, "#FFF8E6")
     scene.rect(0, 0, w, h, accent)
-    scene.rect(3, 3, w - 6, h - 6, NIGHT_CARD)
-    scene.draw_text(label, 24, 16, scale, NIGHT_INK)
+    scene.rect(4, 4, w - 8, h - 8, "#FFF8E6")
+    scene.draw_text(label, 24, 16, scale, "#2A160E")
     return scene
 
 
@@ -936,7 +1054,7 @@ def build_quest(palette: dict, weeks: list[list[tuple[str, int]]], total: int, s
     for level in range(5):
         scene.rect(lx + level * 18, legend_y, 12, 12, colors[level])
     scene.draw_text("BUSY", lx + 5 * 18 + 6, legend_y, 2, palette["muted"])
-    _frame(scene, palette["gold"], 4)
+    candy_frame(scene)
     return scene
 
 

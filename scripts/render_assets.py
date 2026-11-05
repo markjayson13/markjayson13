@@ -111,13 +111,13 @@ def main() -> None:
     save_svg(
         ASSETS / "hero-light.svg",
         build_hero(LIGHT),
-        "Mark Jayson Farol, quantitative economist. The curtain is up at the Farol Playhouse.",
+        "The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist, in a pixel Land of Ooo.",
         "Pixel playbill header. Mark Jayson Farol, quantitative economist, Las Vegas.",
     )
     save_svg(
         ASSETS / "hero-dark.svg",
         build_hero(DARK),
-        "Mark Jayson Farol, quantitative economist. The curtain is up at the Farol Playhouse.",
+        "The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist, in a pixel Land of Ooo.",
         "Pixel playbill header for dark mode. Mark Jayson Farol, quantitative economist, Las Vegas.",
     )
     save_svg(
@@ -153,13 +153,13 @@ def main() -> None:
     save_svg(
         ASSETS / "footer-light.svg",
         build_footer(LIGHT),
-        "Curtain call. Mark Jayson Farol, Las Vegas.",
+        "Mark Jayson Farol, Las Vegas, with the two Lemongrab twins on a candy hill.",
         "Closing pixel curtain.",
     )
     save_svg(
         ASSETS / "footer-dark.svg",
         build_footer(DARK),
-        "Curtain call. Mark Jayson Farol, Las Vegas.",
+        "Mark Jayson Farol, Las Vegas, with the two Lemongrab twins on a candy hill.",
         "Closing pixel curtain for dark mode.",
     )
     for filename, title, subtitle, accent, icon, desc in POSTERS:
