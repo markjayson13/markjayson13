@@ -1,0 +1,42 @@
+name: Quest log
+
+on:
+  schedule:
+    # Monday 14:00 UTC. Redraws the pixel contribution card from the public calendar.
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: quest-log
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Render the pixel quest log
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QUEST_LOGIN: ${{ github.repository_owner }}
+        run: python scripts/render_quest_log.py
+
+      - name: Commit the card when the calendar changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/quest-log-light.svg assets/quest-log-dark.svg
+          if git diff --cached --quiet; then
+            echo "Quest log already matches the calendar."
+            exit 0
+          fi
+          git commit -m "Refresh the pixel quest log"
+          git push
