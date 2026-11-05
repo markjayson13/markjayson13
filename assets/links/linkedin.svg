@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="148" height="48" viewBox="0 0 148 48" role="img" shape-rendering="crispEdges">
+<title>LinkedIn</title>
+<desc>LinkedIn</desc>
+<rect x="0" y="0" width="148" height="48" fill="#FFF8E6"/>
+<rect x="0" y="0" width="148" height="48" fill="#9FD4FF"/>
+<rect x="4" y="4" width="140" height="40" fill="#FFF8E6"/>
+<text x="74" y="31" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="16" font-weight="650" fill="#1B140F" letter-spacing="0.2" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">LinkedIn</text>
+</svg>

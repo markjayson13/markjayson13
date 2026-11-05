@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="236" viewBox="0 0 900 236" role="img" shape-rendering="crispEdges">
+<title>From public sources through reproducible pipelines to panels, Macro by Mark, and working papers.</title>
+<desc>Pixel diagram for dark mode: sources, pipelines, and research output.</desc>
+<rect x="0" y="0" width="900" height="236" fill="#1A1244"/>
+<text x="450" y="28" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="16" font-weight="650" fill="#FFE7A0" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">From the archive to the stage</text>
+<rect x="20" y="44" width="250" height="168" fill="#FFC44D"/>
+<rect x="23" y="47" width="244" height="162" fill="#2C2158"/>
+<rect x="23" y="47" width="244" height="32" fill="#FFC44D"><animate attributeName="fill" dur="3.6s" repeatCount="indefinite" calcMode="discrete" begin="0.00s" values="#FFC44D;#FFF0B8;#FFC44D;#FFC44D" keyTimes="0;0.2;0.4;1"/></rect>
+<text x="145" y="69" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1B140F" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">Sources</text>
+<text x="145" y="102" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">NCES / IPEDS</text>
+<text x="145" y="128" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">Student aid</text>
+<text x="145" y="154" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">FRED, BEA, BLS</text>
+<text x="145" y="180" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">Census and World Bank</text>
+<rect x="278" y="128" width="28" height="4" fill="#FFC44D"/>
+<rect x="302" y="123" width="4" height="14" fill="#FFC44D"/>
+<rect x="306" y="126" width="4" height="8" fill="#FFF0B8"/>
+<rect x="316" y="44" width="250" height="168" fill="#FFC44D"/>
+<rect x="319" y="47" width="244" height="162" fill="#2C2158"/>
+<rect x="319" y="47" width="244" height="32" fill="#FFC44D"><animate attributeName="fill" dur="3.6s" repeatCount="indefinite" calcMode="discrete" begin="0.45s" values="#FFC44D;#FFF0B8;#FFC44D;#FFC44D" keyTimes="0;0.2;0.4;1"/></rect>
+<text x="441" y="69" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1B140F" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">Pipelines</text>
+<text x="441" y="102" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">mdb-tools</text>
+<text x="441" y="128" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">DuckDB and SQL</text>
+<text x="441" y="154" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">Harmonize</text>
+<text x="441" y="180" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">QA / QC gate</text>
+<rect x="574" y="128" width="28" height="4" fill="#FFC44D"/>
+<rect x="598" y="123" width="4" height="14" fill="#FFC44D"/>
+<rect x="602" y="126" width="4" height="8" fill="#FFF0B8"/>
+<rect x="612" y="44" width="250" height="168" fill="#FFC44D"/>
+<rect x="615" y="47" width="244" height="162" fill="#2C2158"/>
+<rect x="615" y="47" width="244" height="32" fill="#FFC44D"><animate attributeName="fill" dur="3.6s" repeatCount="indefinite" calcMode="discrete" begin="0.90s" values="#FFC44D;#FFF0B8;#FFC44D;#FFC44D" keyTimes="0;0.2;0.4;1"/></rect>
+<text x="737" y="69" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1B140F" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">Output</text>
+<text x="737" y="102" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">Year panels</text>
+<text x="737" y="128" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">Macro by Mark</text>
+<text x="737" y="154" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">Working papers</text>
+<text x="737" y="180" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="560" fill="#FFF1C9" letter-spacing="0" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">Replication</text>
+<rect x="0" y="0" width="900" height="5" fill="#FF5C93"/>
+<rect x="0" y="231" width="900" height="5" fill="#FF5C93"/>
+<rect x="0" y="0" width="5" height="236" fill="#FF5C93"/>
+<rect x="895" y="0" width="5" height="236" fill="#FF5C93"/>
+<rect x="5" y="5" width="890" height="3" fill="#FFE14A"/>
+<rect x="5" y="228" width="890" height="3" fill="#FFE14A"/>
+<rect x="5" y="5" width="3" height="226" fill="#FFE14A"/>
+<rect x="892" y="5" width="3" height="226" fill="#FFE14A"/>
+</svg>
