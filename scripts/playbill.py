@@ -780,7 +780,7 @@ def _typing_line(scene: Scene, text: str, y: int, scale: int, fill: str, slot: i
 
 
 def build_hero(palette: dict) -> Scene:
-    """Land of Ooo matinee or twilight, with the two Lemongrab twins in front."""
+    """Daytime or twilight header, with the two Lemongrab twins in front."""
     w, h = 920, 430
     scene = Scene(w, h, palette["bg"])
     night = palette["night"]

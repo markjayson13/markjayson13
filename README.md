@@ -3,7 +3,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="assets/hero-light.svg" />
-  <img alt="The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist, in a pixel Land of Ooo." src="assets/hero-light.svg" width="100%" />
+  <img alt="The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist." src="assets/hero-light.svg" width="100%" />
 </picture>
 
 </div>

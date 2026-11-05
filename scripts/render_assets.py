@@ -111,13 +111,13 @@ def main() -> None:
     save_svg(
         ASSETS / "hero-light.svg",
         build_hero(LIGHT),
-        "The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist, in a pixel Land of Ooo.",
+        "The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist.",
         "Pixel playbill header. Mark Jayson Farol, quantitative economist, Las Vegas.",
     )
     save_svg(
         ASSETS / "hero-dark.svg",
         build_hero(DARK),
-        "The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist, in a pixel Land of Ooo.",
+        "The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist.",
         "Pixel playbill header for dark mode. Mark Jayson Farol, quantitative economist, Las Vegas.",
     )
     save_svg(
