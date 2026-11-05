@@ -3,7 +3,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="assets/hero-light.svg" />
-  <img alt="The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist." src="assets/hero-light.svg" width="100%" />
+  <img alt="Mark Jayson Martinez Farol, quantitative economist, Las Vegas." src="assets/hero-light.svg" width="100%" />
 </picture>
 
 </div>
@@ -199,7 +199,7 @@ Open to **Economist, Research Analyst, Data Analyst, and Financial Analyst** rol
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/footer-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="assets/footer-light.svg" />
-  <img alt="Mark Jayson Farol, Las Vegas. Two pixel Lemongrab figures stand on a candy hill." src="assets/footer-light.svg" width="100%" />
+  <img alt="Mark Jayson Martinez Farol, Las Vegas. Two pixel Lemongrab figures stand on a hill." src="assets/footer-light.svg" width="100%" />
 </picture>
 
 </div>

@@ -1,4 +1,4 @@
-"""Hand-built pixel playbill art for Mark Jayson Farol's GitHub profile.
+"""Hand-built pixel playbill art for Mark Jayson Martinez Farol's GitHub profile.
 
 SVGs are SMIL-only: no scripts, no style blocks, no external images.
 GitHub keeps declarative animation and drops CSS and JavaScript inside
@@ -85,6 +85,9 @@ EXACT_COLORS = {
     "P": "#F9FB00",
     "Q": "#FCFBFA",
     "R": "#FED650",
+    # White suit. S is the fold that used to be E, W is the cloth that used to be D.
+    "S": "#D9D3C8",
+    "W": "#F7F4EE",
 }
 
 FRONT_GRID = """
@@ -119,44 +122,24 @@ JJJJJHHHBBHHHBBHHHJJJJJ
 JJJJJJJHHHHHHHHHJJJJJJJ
 """.strip("\n").splitlines()
 
-# Three-quarter view: same head language, long nose to the side, white suit.
-SIDE_GRID = """
-....CCC................
-...CPPRC...............
-..CLPPRLC..............
-.COPPRROOC.............
-CLPPPPRRRLC............
-CPPPPPPRRRC............
-COPPPPPPRRROC..........
-CPPPPPPPRRRRC..........
-COPPPPPPPRRRROC........
-CPPPPQCCPRRRRC.........
-CPPPPPPPPRRRRPPPPPPPPPC
-CPPPPPPPPRRRRBBBBBBBBBC
-COPPPPCKQRRROC.........
-CPPPPPPRRRRC...........
-.COPPPRRROC............
-..CPPPORRRC............
-JJJJJBQCOPPRRROCQBJJJJJ
-JJJJBCQQCCOROCCQQCBJJJJ
-JJJBQBQQQQCCCQQQQBQBJJJ
-CCCQQBQQQQQCQQQAABQQCCC
-CPPRCBBQQQQQQAAABJCRRRC
-CCCPCIGIQQAMMAQQBHCPCCC
-JJJCCNGGAAMMAQQBHHCCJJJ
-JJJBKINICCCBCCQBHHHHJJJ
-JJBKFFBBCQBHBQQBHHHHJJJ
-JJBFFBHBCQBHBQQBHHHHJJJ
-JJBBBHHBCCBHBCCBHHHJJJJ
-JJJJJHHHBBHHHBBHHHJJJJJ
-JJJJJJJHHHHHHHHHJJJJJJJ
-""".strip("\n").splitlines()
+def _white_suit(grid: list[str]) -> list[str]:
+    """Same sprite, same pose. Only the charcoal suit becomes white."""
+    return [row.replace("E", "S").replace("D", "W") for row in grid]
+
+
+WHITE_GRID = _white_suit(FRONT_GRID)
 
 
 def _check_grids() -> None:
-    for name, grid in (("front", FRONT_GRID), ("side", SIDE_GRID)):
+    allowed = set(EXACT_COLORS) | {"J"}
+    for name, grid in (("front", FRONT_GRID), ("white", WHITE_GRID)):
         if len(grid) != 29 or any(len(row) != 23 for row in grid):
             raise ValueError(f"bad {name} grid")
+        bad = {ch for row in grid for ch in row if ch not in allowed}
+        if bad:
+            raise ValueError(f"{name} grid has {sorted(bad)}")
+        if name == "white" and any("D" in row or "E" in row for row in grid):
+            raise ValueError("white suit still has charcoal pixels")
 
 
 _check_grids()
@@ -312,7 +295,7 @@ LIGHT = {
     "q2": "#F0B429",
     "q3": "#E07A14",
     "q4": "#C4511A",
-    "accents": ["#C4314A", "#1F8A62", "#6C3BB8", "#B47D12", "#C4511A", "#1D6A8C"],
+    "accents": ["#C4314A", "#146848", "#6C3BB8", "#7A4A00", "#A33D10", "#1D6A8C"],
 }
 
 DARK = {
@@ -374,6 +357,11 @@ NIGHT_CARD = "#241436"
 NIGHT_INK = "#FFF1C9"
 NIGHT_MUTED = "#E4C98A"
 NIGHT_GOLD = "#FFC44D"
+
+
+# System faces only. A style block or a web font would be stripped when GitHub
+# serves the SVG as an image, and the pixel alphabet was too small to read.
+SANS = "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
 
 
 def rect_tag(x: int, y: int, w: int, h: int, fill: str, inner: str = "") -> str:
@@ -544,6 +532,28 @@ class Scene:
     def draw_text_centered(self, text: str, cx: int, y: int, scale: int, fill: str, spacing: int | None = None) -> int:
         width = measure(text, scale, spacing)
         return self.draw_text(text, int(cx - width / 2), y, scale, fill, spacing)
+
+    def text(
+        self,
+        content: str,
+        x: int,
+        y: int,
+        size: int,
+        fill: str,
+        weight: int = 600,
+        anchor: str = "middle",
+        spacing: str = "0",
+        opacity: str | None = None,
+        inner: str = "",
+    ) -> None:
+        op = f' opacity="{opacity}"' if opacity is not None else ""
+        self.xml(
+            f'<text x="{int(x)}" y="{int(y)}" text-anchor="{anchor}" '
+            f'font-family="{SANS}" font-size="{size}" font-weight="{weight}" fill="{fill}" '
+            f'letter-spacing="{spacing}"{op} '
+            'shape-rendering="geometricPrecision" text-rendering="geometricPrecision">'
+            f"{inner}{html.escape(content)}</text>"
+        )
 
     def blit_art(self, art: str, cmap: dict[str, str], ox: int, oy: int, scale: int) -> tuple[int, int]:
         rows = parse_art(art)
@@ -779,33 +789,46 @@ def _typing_line(scene: Scene, text: str, y: int, scale: int, fill: str, slot: i
     scene.xml(group)
 
 
+def _crossfade(scene: Scene, lines: list[str], x: int, y: int, size: int, fill: str) -> None:
+    """Swap complete lines. A type-on clip left the sentence unreadable mid-cycle."""
+    slots = len(lines)
+    keys = ";".join(str(i / slots) for i in range(slots)) + ";1"
+    for index, line in enumerate(lines):
+        values = ["0"] * slots
+        values[index] = "1"
+        vals = ";".join(values) + f";{values[0]}"
+        animate = (
+            '<animate attributeName="opacity" dur="20s" repeatCount="indefinite" calcMode="discrete" '
+            f'values="{vals}" keyTimes="{keys}"/>'
+        )
+        scene.text(line, x, y, size, fill, weight=560, spacing="0.2", opacity="1" if index == 0 else "0", inner=animate)
+
+
 def build_hero(palette: dict) -> Scene:
-    """Daytime or twilight header, with the two Lemongrab twins in front."""
-    w, h = 920, 430
+    """Daytime or twilight header. Pixel landscape, modern type, two Lemongrab twins."""
+    w, h = 920, 460
     scene = Scene(w, h, palette["bg"])
     night = palette["night"]
     if night:
         for sx, sy in (
-            (40, 28), (120, 64), (210, 22), (300, 70), (410, 30),
-            (520, 58), (640, 24), (730, 68), (820, 36), (880, 18),
+            (36, 22), (110, 36), (188, 18), (760, 24),
+            (820, 40), (870, 16), (250, 28), (680, 20),
         ):
             scene.rect(sx, sy, 3, 3, "#FFF6C2")
-        _spark(scene, 160, 40, "#FFF6C2", "0s")
-        _spark(scene, 600, 48, "#FFE14A", "0.6s")
-        _spark(scene, 840, 80, "#FF8EC4", "1.1s")
+        _spark(scene, 150, 26, "#FFF6C2", "0s")
+        _spark(scene, 790, 30, "#FFE14A", "0.6s")
     else:
-        for cx, cy in ((30, 18), (150, 28), (340, 14), (560, 26), (760, 16)):
+        for cx, cy in ((24, 12), (168, 18), (748, 14), (820, 20)):
             _cloud(scene, cx, cy, palette["cloud"])
-        _spark(scene, 250, 36, "#FFFFFF", "0s")
-        _spark(scene, 680, 30, "#FFE14A", "0.7s")
+        _spark(scene, 140, 24, "#FFFFFF", "0s")
+        _spark(scene, 700, 22, "#FFE14A", "0.7s")
 
-    # Lemon-kingdom towers behind the hills, one on each side.
-    _lemon_tower(scene, 28, 118, 230)
-    _lemon_tower(scene, 118, 168, 170)
-    _lemon_tower(scene, 760, 150, 190)
-    _lemon_tower(scene, 850, 110, 240)
+    _lemon_tower(scene, 28, 150, 230)
+    _lemon_tower(scene, 112, 198, 170)
+    _lemon_tower(scene, 768, 180, 190)
+    _lemon_tower(scene, 850, 140, 240)
 
-    hill_y = 348
+    hill_y = 372
     scene.rect(0, hill_y, w, h - hill_y, palette["hill"])
     _ellipse(scene, 180, hill_y, 200, 34, palette["hill_hi"])
     _ellipse(scene, 480, hill_y + 6, 240, 40, palette["hill"])
@@ -814,62 +837,53 @@ def build_hero(palette: dict) -> Scene:
         scene.rect(gx + 2, gy, 4, 10, palette["hill_dark"])
         scene.rect(gx, gy + 4, 10, 6, palette["hill_hi"])
 
-    banner = "THE EARL OF LEMONGARB PRESENTS"
-    banner_w = measure(banner, 2)
-    bx = (w - banner_w) // 2 - 12
-    scene.rect(bx, 46, banner_w + 24, 24, "#FF5C93")
-    scene.rect(bx + 4, 50, banner_w + 16, 16, "#FFE14A")
-    scene.draw_text(banner, bx + 12, 51, 2, "#2A160E")
-    scene.draw_text_centered("MARK JAYSON FAROL", w // 2, 78, 4, palette["marquee"])
-    scene.draw_text_centered("QUANTITATIVE ECONOMIST", w // 2, 112, 2, palette["role"])
-
-    lines = [
-        "RESEARCH-GRADE PANELS",
-        "147,782 x 2,676 PANEL",
-        "A 39-CHECK AUDIT",
-        "2004-2024 IPEDS",
-        "OPEN TO ECONOMIST ROLES",
-    ]
-    for index, line in enumerate(lines):
-        _typing_line(scene, line, 134, 3, palette["rotator"], index, len(lines), palette["gold"])
+    scene.text("Mark Jayson Martinez Farol", w // 2, 74, 40, palette["marquee"], weight=700, spacing="-0.4")
+    scene.rect(w // 2 - 28, 92, 40, 4, "#FFE14A")
+    scene.rect(w // 2 + 16, 92, 12, 4, "#FF5C93")
+    scene.text("Quantitative economist  ·  Las Vegas", w // 2, 120, 18, palette["role"], weight=560, spacing="0.3")
+    _crossfade(
+        scene,
+        [
+            "Research-grade panels",
+            "147,782 × 2,676 IPEDS file",
+            "A 39-check acceptance audit",
+            "IPEDS, 2004–2024",
+            "Open to economist roles",
+        ],
+        w // 2,
+        152,
+        18,
+        palette["rotator"],
+    )
 
     scale = 6
     sprite_h = 29 * scale
     sprite_w = 23 * scale
-    gap = 22
+    gap = 28
     pair = sprite_w * 2 + gap
     left = (w - pair) // 2
     top = hill_y - sprite_h + 18
-    # Side twin on the left, nose pointing toward the front twin.
-    scene.xml(sprite_group(SIDE_GRID, left, top, scale, "0s"))
+    scene.xml(sprite_group(WHITE_GRID, left, top, scale, "0s"))
     scene.xml(sprite_group(FRONT_GRID, left + sprite_w + gap, top, scale, "0.45s"))
-
-    bubble = "ACCEPTABLE."
-    bubble_w = measure(bubble, 2)
-    speech_x = left + sprite_w - 10
-    speech_y = top - 8
-    scene.rect(speech_x, speech_y, bubble_w + 16, 22, "#FFFDF6")
-    scene.rect(speech_x + 8, speech_y + 20, 8, 6, "#FFFDF6")
-    scene.draw_text(bubble, speech_x + 8, speech_y + 4, 2, "#2A160E")
 
     candy_frame(scene)
     return scene
 
 
 def build_stats(palette: dict) -> Scene:
-    w, h = 900, 196
+    w, h = 900, 248
     scene = Scene(w, h, palette["bg"])
     cards = [
-        ("147,782", "x 2,676", "2004-2024", 0),
-        ("141,711", "x 2,721", "LABELS V1", 1),
-        ("39", "CHECK AUDIT", "ACCEPTANCE", 2),
-        ("25+ YRS", "TITLE IV", "VOLUME", 3),
-        ("200+", "STUDENTS", "EACH TERM", 4),
-        ("10", "RESEARCHERS", "MENTORED", 5),
+        ("147,782", "rows × 2,676 columns", "2004–2024 IPEDS", 0),
+        ("141,711", "rows × 2,721 columns", "Labeled release v1", 1),
+        ("39", "acceptance checks", "Audit", 2),
+        ("25+ years", "Title IV volume", "Federal Student Aid", 3),
+        ("200+", "students", "Each term", 4),
+        ("10", "researchers", "Mentored", 5),
     ]
-    margin, gap = 10, 10
+    margin, gap = 12, 12
     card_w = (w - margin * 2 - gap * 2) // 3
-    card_h = 84
+    card_h = 104
     for index, (big, mid, small, accent_i) in enumerate(cards):
         col, row = index % 3, index // 3
         x = margin + col * (card_w + gap)
@@ -877,18 +891,13 @@ def build_stats(palette: dict) -> Scene:
         accent = palette["accents"][accent_i]
         scene.rect(x, y, card_w, card_h, palette["gold"])
         scene.rect(x + 3, y + 3, card_w - 6, card_h - 6, palette["ticket"])
-        scene.rect(x + 3, y + 3, 10, card_h - 6, accent)
-        for hole_y in (y + 16, y + card_h // 2 - 3, y + card_h - 22):
-            scene.rect(x + 6, hole_y, 5, 5, palette["bg"])
-        lines = [(big, 3, accent), (mid, 2, palette["ticket_ink"]), (small, 2, palette["muted"])]
-        block_h = sum(GLYPH_H * scale for _, scale, _ in lines) + 4 * (len(lines) - 1)
-        text_y = y + (card_h - block_h) // 2
-        content_x = x + 18
-        content_w = card_w - 28
-        for text, scale, color in lines:
-            tw = measure(text, scale)
-            scene.draw_text(text, content_x + (content_w - tw) // 2, text_y, scale, color)
-            text_y += GLYPH_H * scale + 4
+        scene.rect(x + 3, y + 3, 8, card_h - 6, accent)
+        for hole_y in (y + 18, y + card_h // 2 - 3, y + card_h - 24):
+            scene.rect(x + 5, hole_y, 5, 5, palette["bg"])
+        cx = x + 18 + (card_w - 28) // 2
+        scene.text(big, cx, y + 48, 28, accent, weight=720, spacing="-0.4")
+        scene.text(mid, cx, y + 72, 14, palette["ticket_ink"], weight=600)
+        scene.text(small, cx, y + 90, 13, palette["muted"], weight=500)
     candy_frame(scene)
     return scene
 
@@ -910,17 +919,18 @@ def build_divider() -> Scene:
 
 
 def build_pipeline(palette: dict) -> Scene:
-    w, h = 900, 214
+    w, h = 900, 236
     scene = Scene(w, h, palette["bg"])
-    headers = ["SOURCES", "PIPELINES", "OUTPUT"]
+    headers = ["Sources", "Pipelines", "Output"]
     columns = [
-        ["NCES / IPEDS", "STUDENT AID", "FRED BEA BLS", "CENSUS + WB"],
-        ["MDB-TOOLS", "DUCKDB + SQL", "HARMONIZE", "QA / QC GATE"],
-        ["YEAR PANELS", "MACRO BY MARK", "WORKING PAPERS", "REPLICATION"],
+        ["NCES / IPEDS", "Student aid", "FRED, BEA, BLS", "Census and World Bank"],
+        ["mdb-tools", "DuckDB and SQL", "Harmonize", "QA / QC gate"],
+        ["Year panels", "Macro by Mark", "Working papers", "Replication"],
     ]
-    box_w, box_h = 250, 156
+    box_w, box_h = 250, 168
     gap = 46
-    origin_x, origin_y = 20, 36
+    origin_x, origin_y = 20, 44
+    scene.text("From the archive to the stage", w // 2, 28, 16, palette["marquee"], weight=650)
     for index, (header, lines) in enumerate(zip(headers, columns)):
         x = origin_x + index * (box_w + gap)
         scene.rect(x, origin_y, box_w, box_h, palette["gold"])
@@ -930,13 +940,11 @@ def build_pipeline(palette: dict) -> Scene:
             f'begin="{index * 0.45:.2f}s" values="{palette["gold"]};{palette["gold_hi"]};{palette["gold"]};{palette["gold"]}" '
             'keyTimes="0;0.2;0.4;1"/>'
         )
-        scene.rect(x + 3, origin_y + 3, box_w - 6, 28, palette["gold"], pulse)
-        hw = measure(header, 2)
-        scene.draw_text(header, x + (box_w - hw) // 2, origin_y + 8, 2, "#2A160E")
-        line_y = origin_y + 44
+        scene.rect(x + 3, origin_y + 3, box_w - 6, 32, palette["gold"], pulse)
+        scene.text(header, x + box_w // 2, origin_y + 25, 15, "#1B140F", weight=700)
+        line_y = origin_y + 58
         for line in lines:
-            lw = measure(line, 2)
-            scene.draw_text(line, x + (box_w - lw) // 2, line_y, 2, palette["ticket_ink"])
+            scene.text(line, x + box_w // 2, line_y, 15, palette["ticket_ink"], weight=560)
             line_y += 26
         if index < 2:
             ax = x + box_w + 8
@@ -944,24 +952,23 @@ def build_pipeline(palette: dict) -> Scene:
             scene.rect(ax, ay, gap - 18, 4, palette["gold"])
             scene.rect(ax + gap - 22, ay - 5, 4, 14, palette["gold"])
             scene.rect(ax + gap - 18, ay - 2, 4, 8, palette["gold_hi"])
-    scene.draw_text_centered("FROM THE ARCHIVE TO THE STAGE", w // 2, 14, 2, palette["muted"])
     candy_frame(scene)
     return scene
 
 
 def build_footer(palette: dict) -> Scene:
-    w, h = 920, 132
+    w, h = 920, 148
     scene = Scene(w, h, palette["bg"])
-    hill_y = 96
+    hill_y = 108
     scene.rect(0, hill_y, w, h - hill_y, palette["hill"])
     _ellipse(scene, 160, hill_y, 140, 22, palette["hill_hi"])
     _ellipse(scene, 760, hill_y, 150, 22, palette["hill_dark"])
     scale = 3
-    top = h - 8 - 29 * scale
-    scene.xml(sprite_group(SIDE_GRID, 18, top, scale, "0.2s"))
+    top = h - 10 - 29 * scale
+    scene.xml(sprite_group(WHITE_GRID, 18, top, scale, "0.2s"))
     scene.xml(sprite_group(FRONT_GRID, w - 18 - 23 * scale, top, scale, "0.7s"))
-    scene.draw_text_centered("MARK JAYSON FAROL", w // 2, 28, 3, palette["marquee"])
-    scene.draw_text_centered("LAS VEGAS", w // 2, 58, 2, palette["role"])
+    scene.text("Mark Jayson Martinez Farol", w // 2, 42, 26, palette["marquee"], weight=700, spacing="-0.3")
+    scene.text("Las Vegas", w // 2, 70, 16, palette["role"], weight=560, spacing="0.4")
     candy_frame(scene)
     return scene
 
@@ -971,16 +978,16 @@ def _icon_colors(accent: str) -> dict[str, str]:
 
 
 def build_poster(title: str, subtitle: str, accent: str, icon: str) -> Scene:
-    w, h = 880, 84
+    w, h = 880, 96
     scene = Scene(w, h, "#FFF8E6")
     scene.rect(0, 0, w, h, "#FF5C93")
     scene.rect(5, 5, w - 10, h - 10, "#FFE566")
     scene.rect(9, 9, w - 18, h - 18, "#FFF8E6")
-    scene.rect(9, 9, 10, h - 18, accent)
+    scene.rect(9, 9, 8, h - 18, accent)
     rows = parse_art(ICONS[icon])
-    blit(scene.bag, rows, _icon_colors(accent), 28, 20, 4)
-    scene.draw_text(title, 112, 16, 3, "#2A160E")
-    scene.draw_text(subtitle, 112, 48, 2, "#6B4428")
+    blit(scene.bag, rows, _icon_colors(accent), 28, 28, 4)
+    scene.text(title, 112, 42, 22, "#1B140F", weight=700, anchor="start", spacing="-0.2")
+    scene.text(subtitle, 112, 68, 15, "#5C4636", weight=500, anchor="start")
     chevron = ["#..", "##.", "###", "##.", "#.."]
     ox, oy = w - 42, 30
     bag = scene.bag
@@ -994,13 +1001,13 @@ def build_poster(title: str, subtitle: str, accent: str, icon: str) -> Scene:
 
 
 def build_link(label: str, accent: str) -> Scene:
-    scale = 3
-    text_w = measure(label, scale)
-    w, h = text_w + 48, 52
+    # Generous width so a system face never clips the label.
+    w = max(148, 28 + len(label) * 11)
+    h = 48
     scene = Scene(w, h, "#FFF8E6")
     scene.rect(0, 0, w, h, accent)
     scene.rect(4, 4, w - 8, h - 8, "#FFF8E6")
-    scene.draw_text(label, 24, 16, scale, "#2A160E")
+    scene.text(label, w // 2, 31, 16, "#1B140F", weight=650, spacing="0.2")
     return scene
 
 
@@ -1023,18 +1030,15 @@ def build_quest(palette: dict, weeks: list[list[tuple[str, int]]], total: int, s
     cols = max(len(weeks), 1)
     grid_w = cols * step
     left = (w - grid_w) // 2
-    top = 78
-    h = top + 7 * step + 36
+    top = 88
+    h = top + 7 * step + 42
     scene = Scene(w, h, palette["bg"])
-    scene.draw_text("THIS SEASON", 24, 16, 3, palette["marquee"])
-    span = f"{start_label} - {end_label}"
-    scene.draw_text(span, 24, 44, 2, palette["muted"])
+    scene.text("This season", 28, 36, 26, palette["marquee"], weight=700, anchor="start", spacing="-0.3")
+    span = f"{start_label} – {end_label}"
+    scene.text(span, 28, 62, 15, palette["muted"], weight=500, anchor="start")
     total_text = f"{total:,}"
-    total_w = measure(total_text, 4)
-    scene.draw_text(total_text, w - 24 - total_w, 12, 4, palette["gold"])
-    caption = "PUBLIC CONTRIBUTIONS"
-    caption_w = measure(caption, 2)
-    scene.draw_text(caption, w - 24 - caption_w, 46, 2, palette["muted"])
+    scene.text(total_text, w - 28, 38, 30, palette["marquee"], weight=720, anchor="end", spacing="-0.4")
+    scene.text("Public contributions", w - 28, 62, 14, palette["muted"], weight=500, anchor="end")
 
     counts = [count for week in weeks for _, count in week]
     maximum = max(counts) if counts else 0
@@ -1048,12 +1052,12 @@ def build_quest(palette: dict, weeks: list[list[tuple[str, int]]], total: int, s
             color = colors[contribution_level(count, maximum)]
             scene.rect(left + col * step, top + row * step, cell, cell, color)
 
-    legend_y = top + 7 * step + 8
-    scene.draw_text("QUIET", 24, legend_y, 2, palette["muted"])
-    lx = 24 + measure("QUIET", 2) + 10
+    legend_y = top + 7 * step + 10
+    scene.text("Quiet", 28, legend_y + 11, 13, palette["muted"], weight=560, anchor="start")
+    lx = 84
     for level in range(5):
         scene.rect(lx + level * 18, legend_y, 12, 12, colors[level])
-    scene.draw_text("BUSY", lx + 5 * 18 + 6, legend_y, 2, palette["muted"])
+    scene.text("Busy", lx + 5 * 18 + 8, legend_y + 11, 13, palette["muted"], weight=560, anchor="start")
     candy_frame(scene)
     return scene
 

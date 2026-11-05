@@ -27,72 +27,72 @@ ASSETS = ROOT / "assets"
 POSTERS = [
     (
         "macro.svg",
-        "MACRO BY MARK",
-        "ECONOMICS + U.S. MACRO RESEARCH",
+        "Macro by Mark",
+        "Economics and U.S. macro research",
         "#FFE14A",
         "lemon",
         "Macro by Mark, economics learning and U.S. macro research",
     ),
     (
         "riff.svg",
-        "GETRIFF",
-        "IOS WORKOUT APP IN TESTFLIGHT",
+        "getriff",
+        "iOS workout app in TestFlight",
         "#FF8EC4",
         "riff",
         "getriff, an iOS workout app in TestFlight",
     ),
     (
         "ipedsdb.svg",
-        "IPEDSDB PANEL",
-        "147,782 x 2,676  /  2004-2024",
+        "IPEDSDB Panel",
+        "147,782 × 2,676  ·  2004–2024",
         "#5EECC0",
         "grid",
         "IPEDSDB_Panel. 2004-2024 consolidated file: 147,782 rows by 2,676 columns. Labeled release full-panel-labels-v1: 141,711 by 2,721. A 39-check acceptance audit.",
     ),
     (
         "fsa.svg",
-        "FSA VOLUME PANEL",
-        "25+ YEARS OF TITLE IV VOLUME",
+        "FSA Volume Panel",
+        "25+ years of Title IV volume",
         "#FFC44D",
         "coins",
         "FSAVolumeReports_Panel, 25-plus years of Title IV volume reports",
     ),
     (
         "ipeds-fsa.svg",
-        "IPEDS-FSA PANEL",
-        "AID REPORTS LINKED TO IPEDS",
+        "IPEDS–FSA Panel",
+        "Aid reports linked to IPEDS",
         "#C4A6FF",
         "link",
         "IPEDS-FSA_Panel, Federal Student Aid reports linked to IPEDS",
     ),
     (
         "paneling.svg",
-        "IPEDS PANELING",
-        "DUCKDB PIPELINE FOR NCES IPEDS",
+        "IPEDS Paneling",
+        "DuckDB pipeline for NCES IPEDS",
         "#9FD4FF",
         "stack",
         "IPEDS_Paneling, a DuckDB pipeline for NCES IPEDS",
     ),
     (
         "coa.svg",
-        "COA FINAID SUBS",
-        "COST-OF-ATTENDANCE REPLICATION",
+        "COA Finaid Subs",
+        "Cost-of-attendance replication",
         "#FFB070",
         "scroll",
         "COA_FINAID_SUBS, replication code for cost-of-attendance research",
     ),
     (
         "site.svg",
-        "MARKJAYSON.COM",
-        "PERSONAL SITE  /  ASTRO",
+        "markjayson.com",
+        "Personal site  ·  Astro",
         "#FFE14A",
         "house",
         "markjaysonwebsite-v2, personal site built with Astro",
     ),
     (
         "creative.svg",
-        "CREATIVE WORKS",
-        "PORTFOLIO  /  CLOUDFLARE PAGES",
+        "Creative works",
+        "Portfolio  ·  Cloudflare Pages",
         "#FF8EC4",
         "mask",
         "creative-markjayson, creative portfolio on Cloudflare Pages",
@@ -100,10 +100,10 @@ POSTERS = [
 ]
 
 LINKS = [
-    ("website.svg", "WEBSITE", "#FFE14A"),
-    ("linkedin.svg", "LINKEDIN", "#9FD4FF"),
-    ("email.svg", "EMAIL", "#FF8EC4"),
-    ("letterboxd.svg", "LETTERBOXD", "#5EECC0"),
+    ("website.svg", "Website", "#FFE14A"),
+    ("linkedin.svg", "LinkedIn", "#9FD4FF"),
+    ("email.svg", "Email", "#FF8EC4"),
+    ("letterboxd.svg", "Letterboxd", "#5EECC0"),
 ]
 
 
@@ -111,14 +111,14 @@ def main() -> None:
     save_svg(
         ASSETS / "hero-light.svg",
         build_hero(LIGHT),
-        "The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist.",
-        "Pixel playbill header. Mark Jayson Farol, quantitative economist, Las Vegas.",
+        "Mark Jayson Martinez Farol, quantitative economist, Las Vegas.",
+        "Pixel landscape header. Mark Jayson Martinez Farol, quantitative economist, with two Lemongrab figures.",
     )
     save_svg(
         ASSETS / "hero-dark.svg",
         build_hero(DARK),
-        "The Earl of Lemongrab presents Mark Jayson Farol, quantitative economist.",
-        "Pixel playbill header for dark mode. Mark Jayson Farol, quantitative economist, Las Vegas.",
+        "Mark Jayson Martinez Farol, quantitative economist, Las Vegas.",
+        "Twilight header. Mark Jayson Martinez Farol, quantitative economist, with two Lemongrab figures.",
     )
     save_svg(
         ASSETS / "stats-light.svg",
@@ -153,14 +153,14 @@ def main() -> None:
     save_svg(
         ASSETS / "footer-light.svg",
         build_footer(LIGHT),
-        "Mark Jayson Farol, Las Vegas, with the two Lemongrab twins on a candy hill.",
-        "Closing pixel curtain.",
+        "Mark Jayson Martinez Farol, Las Vegas, with two Lemongrab figures on a hill.",
+        "Closing pixel scene.",
     )
     save_svg(
         ASSETS / "footer-dark.svg",
         build_footer(DARK),
-        "Mark Jayson Farol, Las Vegas, with the two Lemongrab twins on a candy hill.",
-        "Closing pixel curtain for dark mode.",
+        "Mark Jayson Martinez Farol, Las Vegas, with two Lemongrab figures on a hill.",
+        "Closing pixel scene for dark mode.",
     )
     for filename, title, subtitle, accent, icon, desc in POSTERS:
         save_svg(
